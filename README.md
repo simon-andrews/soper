@@ -1,3 +1,6 @@
+
+![Soper header](soper_header.png)
+
 # Soper
 
 Soper is a proof-of-concept of a tool for tracking the spread of sentiments and rumors through social networks. It works by detecting changes in the sentiments of the posts of your friends. The more dramatically your friends' views shift over time, the more suspicious you are to Soper.
@@ -32,3 +35,7 @@ Soper is written in [Python 3](https://www.python.org/) and uses:
  * [Matplotlib](https://matplotlib.org/) for plotting pretty graphs.
 
 For sentiment analysis, Soper uses [VADER](https://github.com/cjhutto/vaderSentiment), a sentiment analyzer tuned specifically for social media posts.
+
+## Image attributions
+ * The magnifying glass is by ernes on [openclipart.org](https://openclipart.org/detail/5218/lente-magnifying-glass).
+ * The social network image is by [Martin Grandjean](https://commons.wikimedia.org/wiki/File:Social_Network_Analysis_Visualization.png).
