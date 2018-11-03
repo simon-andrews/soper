@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from termcolor import cprint
 import itertools
 import json
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import random
-
-import nltk
-nltk.download('vader_lexicon')
+import time
+import tqdm
 
 sid = SentimentIntensityAnalyzer()
 
@@ -155,6 +155,8 @@ for step in range(simulation_step_count):
         for person in group:
             if random.random() < person.activity_level:
                 data = person.post(step, data)
+                time.sleep(0.0005)
+                print('@{}:\t{}'.format(person.id_number, data[person.id_number]['feed'][-1][1][1]))
                 for viewer in social_network.neighbors(person):
                     if random.random() < viewer.gullibility:
                         viewer.hostility += person.hostility / 500
@@ -170,5 +172,9 @@ for person in all_people:
 j = json.dumps(data)
 with open('/tmp/out.json', 'w') as f:
     f.write(j)
-print('simulation data written')
-print('Actual agitator is ' + str(agitator))
+print('#' * 80)
+print('group count:\t' + str(friend_group_count))
+print('friends/group:\t' + str(friends_per_group))
+print('person count:\t' + str(len(all_people)))
+print('sim days:\t' + str(simulation_step_count))
+cprint('agitator:\t' + str(agitator), 'red')
