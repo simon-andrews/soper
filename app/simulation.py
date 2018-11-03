@@ -2,11 +2,11 @@
 
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import itertools
+import json
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import random
-import scipy
 
 import nltk
 nltk.download('vader_lexicon')
@@ -69,7 +69,6 @@ class Person(object):
         self.gullibility = np.random.normal(loc=0.5, scale=0.1) # mean=loc,stdev=scale
         self.hostility = np.random.normal(loc=0, scale=0.2); self.hostility_temp = None
         self.activity_level = np.random.chisquare(3) / 15
-        #self.feed = list()
     def __str__(self):
         return str(self.id_number)
     def attitude(self):
@@ -147,6 +146,7 @@ for group in friend_groups:
             'feed_length': list(),
             'feed': list(),
             'hostility': list(),
+            'neighbors': list(),
         }
         person.feed = list()
 
@@ -160,27 +160,15 @@ for step in range(simulation_step_count):
                         viewer.hostility += person.hostility / 500
 
             # update tracked data
-            data[person.id_number]['feed_length'].append(len(person.feed))
+            data[person.id_number]['feed_length'].append(len(data[person.id_number]['feed']))
             data[person.id_number]['hostility'].append(person.hostility)
 
-slopes = list()
 for person in all_people:
-    x = [post[0] for post in data[person.id_number]['feed']]
-    y = [post[1][0] for post in data[person.id_number]['feed']]
-    fit = np.polyfit(x, y, 1)
-    slope = fit[0]
-    slopes.append(slope)
+    neighbor_ids = [n.id_number for n in social_network.neighbors(person)]
+    data[person.id_number]['neighbors'] = neighbor_ids
 
-mean_neighbor_slopes = list()
-for person in all_people:
-    neighbors = social_network.neighbors(person)
-    mean_neighbor_slope = np.mean([slopes[n.id_number] for n in neighbors])
-    mean_neighbor_slopes.append(mean_neighbor_slope)
-
-agitator_mean_neighbor_slope = min(mean_neighbor_slopes)
-predicted_agitator = None
-for index, slope in enumerate(mean_neighbor_slopes):
-    if slope == agitator_mean_neighbor_slope:
-        predicted_agitator = all_people[index]
-print('Predicted agitator:\t' + str(predicted_agitator))
-print('Actual agitator:\t' + str(agitator))
+j = json.dumps(data)
+with open('/tmp/out.json', 'w') as f:
+    f.write(j)
+print('simulation data written')
+print('Actual agitator is ' + str(agitator))
