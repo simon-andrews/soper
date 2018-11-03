@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
 
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import json
 import numpy as np
 import sys
+
+sid = SentimentIntensityAnalyzer()
 
 try:
     outfile = sys.argv[1]
@@ -14,7 +17,7 @@ with open(outfile, 'r') as f:
 slopes = list()
 for id_number in data.keys():
     x = [post[0] for post in data[id_number]['feed']]
-    y = [post[1][0] for post in data[id_number]['feed']]
+    y = [sid.polarity_scores(post[1])['compound'] for post in data[id_number]['feed']]
     fit = np.polyfit(x, y, 1)
     slope = fit[0]
     slopes.append(slope)

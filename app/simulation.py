@@ -60,7 +60,7 @@ all_posts = positive_posts + neutral_posts + negative_posts
 all_posts = [(sid.polarity_scores(p)['compound'], p) for p in all_posts]
 
 def closest_post_to_sentiment(target_sentiment):
-    return min(all_posts, key=lambda p: abs(target_sentiment - p[0]))
+    return min(all_posts, key=lambda p: abs(target_sentiment - p[0]))[1]
 
 class Person(object):
     def __init__(self, id_number):
@@ -156,7 +156,7 @@ for step in range(simulation_step_count):
             if random.random() < person.activity_level:
                 data = person.post(step, data)
                 time.sleep(0.0005)
-                print('@{}:\t{}'.format(person.id_number, data[person.id_number]['feed'][-1][1][1]))
+                print('@{}:\t{}'.format(person.id_number, data[person.id_number]['feed'][-1][1]))
                 for viewer in social_network.neighbors(person):
                     if random.random() < viewer.gullibility:
                         viewer.hostility += person.hostility / 500
