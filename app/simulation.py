@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import random
+import sys
 import time
 
 sid = SentimentIntensityAnalyzer()
@@ -169,7 +170,11 @@ for person in all_people:
     data[person.id_number]['neighbors'] = neighbor_ids
 
 j = json.dumps(data)
-with open('/tmp/out.json', 'w') as f:
+try:
+    outfile = sys.argv[1]
+except IndexError:
+    outfile = '/tmp/out.json'
+with open(outfile, 'w') as f:
     f.write(j)
 print('#' * 80)
 print('group count:\t'   + str(friend_group_count))

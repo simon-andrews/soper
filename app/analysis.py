@@ -2,8 +2,13 @@
 
 import json
 import numpy as np
+import sys
 
-with open('/tmp/out.json', 'r') as f:
+try:
+    outfile = sys.argv[1]
+except IndexError:
+    outfile = '/tmp/out.json'
+with open(outfile, 'r') as f:
     data = json.loads(f.read())
 
 slopes = list()
