@@ -69,7 +69,7 @@ class Person(object):
         self.gullibility = np.random.normal(loc=0.5, scale=0.1) # mean=loc,stdev=scale
         self.hostility = np.random.normal(loc=0, scale=0.2); self.hostility_temp = None
         self.activity_level = np.random.chisquare(3) / 15
-        self.feed = list()
+        #self.feed = list()
     def __str__(self):
         return str(self.id_number)
     def attitude(self):
@@ -79,9 +79,9 @@ class Person(object):
             return 'pos'
         else:
             return 'neu'
-    def post(self, step):
-        a = self.attitude()
-        self.feed.append( (step, closest_post_to_sentiment(self.hostility)) )
+    def post(self, step, data):
+        data[self.id_number]['feed'].append( (step, closest_post_to_sentiment(self.hostility)) )
+        return data
 
 friend_groups = list()
 friend_networks = list()
@@ -145,6 +145,7 @@ for group in friend_groups:
     for person in group:
         data[person.id_number] = {
             'feed_length': list(),
+            'feed': list(),
             'hostility': list(),
         }
         person.feed = list()
@@ -153,7 +154,7 @@ for step in range(simulation_step_count):
     for group in friend_groups:
         for person in group:
             if random.random() < person.activity_level:
-                person.post(step)
+                data = person.post(step, data)
                 for viewer in social_network.neighbors(person):
                     if random.random() < viewer.gullibility:
                         viewer.hostility += person.hostility / 500
@@ -164,8 +165,8 @@ for step in range(simulation_step_count):
 
 slopes = list()
 for person in all_people:
-    x = [post[0] for post in person.feed]
-    y = [post[1][0] for post in person.feed]
+    x = [post[0] for post in data[person.id_number]['feed']]
+    y = [post[1][0] for post in data[person.id_number]['feed']]
     fit = np.polyfit(x, y, 1)
     slope = fit[0]
     slopes.append(slope)
