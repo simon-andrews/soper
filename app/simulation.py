@@ -178,3 +178,50 @@ print('person count:\t'  + str(len(all_people)))
 print('sim days:\t'      + str(simulation_step_count))
 print('total posts:\t'   + str(sum([len(data[id_num]['feed']) for id_num in data.keys()])))
 cprint('agitator:\t'     + str(agitator), 'red')
+print()
+while True:
+    print('your options:')
+    print(' - view [n]etwork')
+    print(' - view [h]ostility over time')
+    print(' - view [f]it info')
+    print(' - [e]xit')
+    command = input('what now? ')
+    if command == 'n':
+        group_color_map = list()
+        for index, group in enumerate(friend_groups):
+            for _ in range(len(group)):
+                group_color_map.append(index / len(friend_groups))
+        plt.title('The full social network')
+        nx.draw(social_network, with_labels=True, node_color=group_color_map)
+        plt.show()
+    elif command == 'h':
+        id_number = int(input('for whom? '))
+        person = all_people[id_number]
+        plt.title('Hostility')
+        plt.ylim(-1, 1)
+        plt.ylabel('Hostility (-1 to 1)')
+        plt.xlabel('Simulation step number')
+        plt.axhspan(0.25,1,alpha=0.2,color='green')
+        plt.axhspan(-1,-0.25,alpha=0.2,color='red')
+        plt.plot(data[person.id_number]['hostility'])
+        plt.show()
+    elif command == 'f':
+        id_number = int(input('for whom? '))
+        person = all_people[id_number]
+        x = [post[0] for post in data[person.id_number]['feed']]
+        y = [post[1][0] for post in data[person.id_number]['feed']]
+
+        fit = np.polyfit(x, y, 1)
+        slope = fit[0]
+        fit_fn = np.poly1d(fit)
+
+        #plt.plot(x, y)
+        plt.title('Regression slope: ' + str(slope))
+        plt.xlabel('Simulation step')
+        plt.ylabel('Post sentiment')
+        plt.plot(x, y, 'o', x, fit_fn(x))
+        plt.show()
+    elif command == 'e':
+        exit(0)
+    else:
+        print('not sure what you meant by that...')
