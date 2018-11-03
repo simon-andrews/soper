@@ -30,7 +30,16 @@ for id_number in data.keys():
 
 agitator_mean_neighbor_slope = min(mean_neighbor_slopes)
 predicted_agitator = None
-for index, slope in enumerate(mean_neighbor_slopes):
-    if slope == agitator_mean_neighbor_slope:
-        predicted_agitator = list(data.keys())[index]
-print('Predicted agitator:\t' + str(predicted_agitator))
+agitation_rankings = sorted(data.keys(), key=lambda k: mean_neighbor_slopes[int(k)])
+agitation_rankings = [int(x) for x in agitation_rankings]
+n = 3
+top_n_mean = np.mean([mean_neighbor_slopes[id_num] for id_num in agitation_rankings][:n])
+print(top_n_mean)
+print('Predicted agitators:')
+impacts = list()
+for i in range(n):
+    mean_neighbor_slope = mean_neighbor_slopes[agitation_rankings[i]]
+    impact = mean_neighbor_slope / n
+    impacts.append(impact)
+for i in range(n):
+    print('{}: {} ({})'.format(i + 1, agitation_rankings[i], impacts[i] / top_n_mean))
