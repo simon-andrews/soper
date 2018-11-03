@@ -233,7 +233,7 @@ while True:
         id_number = int(input('for whom? '))
         person = all_people[id_number]
         x = [post[0] for post in data[person.id_number]['feed']]
-        y = [post[1][0] for post in data[person.id_number]['feed']]
+        y = [sid.polarity_scores(post[1])['compound'] for post in data[person.id_number]['feed']]
 
         fit = np.polyfit(x, y, 1)
         slope = fit[0]
