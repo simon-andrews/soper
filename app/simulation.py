@@ -150,6 +150,10 @@ for group in friend_groups:
         }
         person.feed = list()
 
+initial_state = dict()
+for person in all_people:
+    initial_state[person.id_number] = person.attitude()
+
 for step in range(simulation_step_count):
     for group in friend_groups:
         for person in group:
@@ -176,6 +180,21 @@ except IndexError:
     outfile = '/tmp/out.json'
 with open(outfile, 'w') as f:
     f.write(j)
+print('#' * 80)
+print('changes')
+changes = dict()
+for initial in ['pos', 'neu', 'neg']:
+    for final in ['pos', 'neu', 'neg']:
+        changes[initial + ' -> ' + final] = 0
+for person in all_people:
+    initial = initial_state[person.id_number]
+    final = person.attitude()
+    if final != initial:
+        changes[initial + ' -> ' + final] = changes[initial + ' -> ' + final] + 1
+for key in changes.keys():
+    if changes[key] != 0:
+        print(key + ': ' + str(changes[key]))
+
 print('#' * 80)
 print('group count:\t'   + str(friend_group_count))
 print('friends/group:\t' + str(friends_per_group))
