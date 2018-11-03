@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import itertools
 import matplotlib.pyplot as plt
