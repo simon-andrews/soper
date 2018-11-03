@@ -9,7 +9,6 @@ import networkx as nx
 import numpy as np
 import random
 import time
-import tqdm
 
 sid = SentimentIntensityAnalyzer()
 
@@ -173,9 +172,9 @@ j = json.dumps(data)
 with open('/tmp/out.json', 'w') as f:
     f.write(j)
 print('#' * 80)
-print('group count:\t' + str(friend_group_count))
+print('group count:\t'   + str(friend_group_count))
 print('friends/group:\t' + str(friends_per_group))
-print('person count:\t' + str(len(all_people)))
-print('sim days:\t' + str(simulation_step_count))
-print('total posts:\t' + str(sum([len(data[id_num]['feed']) for id_num in data.keys()])))
-cprint('agitator:\t' + str(agitator), 'red')
+print('person count:\t'  + str(len(all_people)))
+print('sim days:\t'      + str(simulation_step_count))
+print('total posts:\t'   + str(sum([len(data[id_num]['feed']) for id_num in data.keys()])))
+cprint('agitator:\t'     + str(agitator), 'red')
