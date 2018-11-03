@@ -17,6 +17,9 @@ with open(outfile, 'r') as f:
 slopes = list()
 for id_number in data.keys():
     x = [post[0] for post in data[id_number]['feed']]
+    if x == []:
+        print('are you sure you configured your network right?')
+        exit(1)
     y = [sid.polarity_scores(post[1])['compound'] for post in data[id_number]['feed']]
     fit = np.polyfit(x, y, 1)
     slope = fit[0]
@@ -34,7 +37,6 @@ agitation_rankings = sorted(data.keys(), key=lambda k: mean_neighbor_slopes[int(
 agitation_rankings = [int(x) for x in agitation_rankings]
 n = 3
 top_n_mean = np.mean([mean_neighbor_slopes[id_num] for id_num in agitation_rankings][:n])
-print(top_n_mean)
 print('Predicted agitators:')
 impacts = list()
 for i in range(n):
